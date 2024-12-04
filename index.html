@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A dedicated Zettelkasten store offering premium notecards, containers, pens, and accessories for organizing your thoughts.">
+    <title>Zettelkasten Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tippy.js@6/dist/tippy.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glider-js@1/glider.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/glider-js@1/glider.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .primary-btn {
+            background-color: #10b981;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            font-weight: 600;
+        }
+        .primary-btn:hover {
+            background-color: #059669;
+        }
+        .product-card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .footer {
+            background-color: #1f2937;
+            color: #f9fafb;
+            padding: 20px 0;
+        }
+        .product-card img {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header class="bg-dark text-white py-3">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h1 class="h3">Zettelkasten Store</h1>
+            <nav>
+                <ul class="nav">
+                    <li class="nav-item"><a href="#products" class="nav-link text-white">Products</a></li>
+                    <li class="nav-item"><a href="#about" class="nav-link text-white">About</a></li>
+                    <li class="nav-item"><a href="#contact" class="nav-link text-white">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main class="container my-5">
+        <section id="hero" class="text-center py-5">
+            <h2 class="mb-4">Organize Your Thoughts, Build Your Knowledge</h2>
+            <p class="mb-4">Discover premium Zettelkasten products designed to elevate your notetaking experience.</p>
+            <button class="primary-btn" onclick="showOffer()">Special Offer</button>
+        </section>
+        <section id="products" class="my-5">
+            <h3 class="text-center mb-4">Our Products</h3>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="product-card">
+                        <img src="https://picsum.photos/400/300?random=1" alt="Notecards">
+                        <div class="p-3">
+                            <h5>4x6 Notecards</h5>
+                            <p>Perfect for building your Zettelkasten system.</p>
+                            <button class="primary-btn w-100" onclick="addToCart('4x6 Notecards')">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="product-card">
+                        <img src="https://picsum.photos/400/300?random=2" alt="Card Containers">
+                        <div class="p-3">
+                            <h5>Card Containers</h5>
+                            <p>Keep your cards safe and organized.</p>
+                            <button class="primary-btn w-100" onclick="addToCart('Card Containers')">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="product-card">
+                        <img src="https://picsum.photos/400/300?random=3" alt="Zettelkasten Pens">
+                        <div class="p-3">
+                            <h5>Zettelkasten Pens</h5>
+                            <p>Write your notes with precision and style.</p>
+                            <button class="primary-btn w-100" onclick="addToCart('Zettelkasten Pens')">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="about" class="my-5 text-center">
+            <h3 class="mb-4">About Us</h3>
+            <p>We are passionate about helping you capture, organize, and connect your ideas. Zettelkasten Store is your one-stop destination for everything Zettelkasten.</p>
+        </section>
+        <section id="contact" class="my-5">
+            <h3 class="text-center mb-4">Contact Us</h3>
+            <form>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="email" placeholder="name@example.com">
+                </div>
+                <div class="mb-3">
+                    <label for="message" class="form-label">Message</label>
+                    <textarea class="form-control" id="message" rows="3"></textarea>
+                </div>
+                <button type="submit" class="primary-btn">Send</button>
+            </form>
+        </section>
+    </main>
+    <footer class="footer text-center">
+        <p>&copy; 2024 Zettelkasten Store. All rights reserved.</p>
+        <div>
+            <i data-feather="facebook"></i>
+            <i data-feather="twitter"></i>
+            <i data-feather="instagram"></i>
+        </div>
+    </footer>
+    <script>
+        feather.replace();
+        function addToCart(item) {
+            Swal.fire({
+                title: 'Item Added!',
+                text: `${item} has been added to your cart.`,
+                icon: 'success',
+                confirmButtonText: 'Continue Shopping'
+            });
+        }
+        function showOffer() {
+            Swal.fire({
+                title: 'Special Offer!',
+                text: 'Get 20% off on orders over $50!',
+                icon: 'info',
+                confirmButtonText: 'Shop Now'
+            });
+        }
+    </script>
+</body>
+</html>

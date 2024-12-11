@@ -44,6 +44,42 @@
             object-fit: cover;
             width: 100%;
         }
+        #auth-modal, #cart-modal {
+            display: none; 
+            position: fixed; 
+            background: rgba(0,0,0,0.5); 
+            top: 0; left: 0; 
+            width: 100%; height: 100%; 
+            justify-content: center; 
+            align-items: center;
+        }
+        #auth-modal > div, #cart-modal > div {
+            background: white; 
+            padding: 20px; 
+            width: 300px; 
+            border-radius: 8px;
+        }
+        .auth-toggle {
+            cursor: pointer;
+            color: #10b981;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+        .google-btn {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            color: #000;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 6px 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .google-btn img {
+            width: 20px;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -57,8 +93,13 @@
                     <li class="nav-item"><a href="#contact" class="nav-link text-white">Contact</a></li>
                 </ul>
             </nav>
+            <div>
+                <button class="primary-btn" onclick="document.getElementById('auth-modal').style.display='flex'">Login/Register</button>
+                <button class="primary-btn" onclick="document.getElementById('cart-modal').style.display='flex'">Cart</button>
+            </div>
         </div>
     </header>
+
     <main class="container my-5">
         <section id="hero" class="text-center py-5">
             <h2 class="mb-4">Organize Your Thoughts, Build Your Knowledge</h2>
@@ -108,17 +149,18 @@
             <h3 class="text-center mb-4">Contact Us</h3>
             <form>
                 <div class="mb-3">
-                    <label for="email" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="email" placeholder="name@example.com">
+                    <label for="emailContact" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="emailContact" placeholder="name@example.com">
                 </div>
                 <div class="mb-3">
-                    <label for="message" class="form-label">Message</label>
-                    <textarea class="form-control" id="message" rows="3"></textarea>
+                    <label for="messageContact" class="form-label">Message</label>
+                    <textarea class="form-control" id="messageContact" rows="3"></textarea>
                 </div>
                 <button type="submit" class="primary-btn">Send</button>
             </form>
         </section>
     </main>
+
     <footer class="footer text-center">
         <p>&copy; 2024 Zettelkasten Store. All rights reserved.</p>
         <div>
@@ -127,17 +169,100 @@
             <i data-feather="instagram"></i>
         </div>
     </footer>
-    <script>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal">
+        <div>
+            <h3 class="mb-3">Login / Register</h3>
+            <!-- Google Sign In -->
+            <div class="google-btn" id="google-signin-btn">
+                <img src="https://www.gstatic.com/images/branding/product/1x/gsa_64dp.png" alt="Google icon" />
+                <span>Sign in with Google</span>
+            </div>
+            <hr class="my-3">
+            <!-- Email/Password Forms -->
+            <div id="auth-forms">
+                <!-- Login Form -->
+                <div id="login-form">
+                    <h5>Login with Email</h5>
+                    <input class="form-control mb-2" id="loginEmail" type="email" placeholder="Email" />
+                    <input class="form-control mb-2" id="loginPassword" type="password" placeholder="Password" />
+                    <button class="primary-btn w-100 mb-2" id="login-btn">Login</button>
+                    <p class="text-center">Don't have an account? <span class="auth-toggle" id="show-register">Register</span></p>
+                </div>
+                <!-- Register Form (hidden by default) -->
+                <div id="register-form" style="display:none;">
+                    <h5>Register with Email</h5>
+                    <input class="form-control mb-2" id="registerEmail" type="email" placeholder="Email" />
+                    <input class="form-control mb-2" id="registerPassword" type="password" placeholder="Password" />
+                    <button class="primary-btn w-100 mb-2" id="register-btn">Register</button>
+                    <p class="text-center">Already have an account? <span class="auth-toggle" id="show-login">Login</span></p>
+                </div>
+            </div>
+            <button class="btn btn-light w-100 mt-3" onclick="document.getElementById('auth-modal').style.display='none'">Close</button>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cart-modal">
+        <div>
+            <h3>Your Cart</h3>
+            <ul id="cart-items"></ul>
+            <button class="primary-btn w-100 mb-2" id="checkout-btn">Checkout</button>
+            <button class="btn btn-light w-100" onclick="document.getElementById('cart-modal').style.display='none'">Close</button>
+        </div>
+    </div>
+
+    <!-- Firebase and App Logic -->
+    <script type="module">
+        // Import Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+        // Replace with your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "your-api-key",
+            authDomain: "your-auth-domain",
+            projectId: "your-project-id",
+            storageBucket: "your-storage-bucket",
+            messagingSenderId: "your-messaging-sender-id",
+            appId: "your-app-id",
+            measurementId: "your-measurement-id"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
         feather.replace();
-        function addToCart(item) {
+
+        // Cart functionality
+        const cart = [];
+
+        window.addToCart = function(item) {
+            cart.push(item);
             Swal.fire({
                 title: 'Item Added!',
                 text: `${item} has been added to your cart.`,
                 icon: 'success',
                 confirmButtonText: 'Continue Shopping'
             });
+            updateCartDisplay();
         }
-        function showOffer() {
+
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cart-items');
+            cartItems.innerHTML = '';
+            cart.forEach((item) => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                cartItems.appendChild(li);
+            });
+        }
+
+        window.showOffer = function() {
             Swal.fire({
                 title: 'Special Offer!',
                 text: 'Get 20% off on orders over $50!',
@@ -145,6 +270,84 @@
                 confirmButtonText: 'Shop Now'
             });
         }
+
+        document.getElementById('checkout-btn').addEventListener('click', async () => {
+            const user = auth.currentUser;
+            if (!user) {
+                Swal.fire('Please log in to checkout.');
+                return;
+            }
+            try {
+                await addDoc(collection(db, 'orders'), {
+                    userId: user.uid,
+                    cart: cart,
+                    timestamp: new Date()
+                });
+                Swal.fire('Checkout successful!');
+                cart.length = 0;
+                updateCartDisplay();
+                document.getElementById('cart-modal').style.display='none';
+            } catch (error) {
+                Swal.fire('Error', error.message, 'error');
+            }
+        });
+
+        // Auth UI toggling
+        const showLoginBtn = document.getElementById('show-login');
+        const showRegisterBtn = document.getElementById('show-register');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+
+        showLoginBtn.addEventListener('click', () => {
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'none';
+        });
+
+        showRegisterBtn.addEventListener('click', () => {
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'block';
+        });
+
+        // Email/Password Auth
+        const loginBtn = document.getElementById('login-btn');
+        const registerBtn = document.getElementById('register-btn');
+
+        loginBtn.addEventListener('click', async () => {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                Swal.fire('Login successful! 🎉');
+                document.getElementById('auth-modal').style.display = 'none';
+            } catch (error) {
+                Swal.fire('Error', error.message, 'error');
+            }
+        });
+
+        registerBtn.addEventListener('click', async () => {
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            try {
+                await createUserWithEmailAndPassword(auth, email, password);
+                Swal.fire('Registration successful! 🎉');
+                document.getElementById('auth-modal').style.display = 'none';
+            } catch (error) {
+                Swal.fire('Error', error.message, 'error');
+            }
+        });
+
+        // Google Auth
+        const googleBtn = document.getElementById('google-signin-btn');
+        const provider = new GoogleAuthProvider();
+        googleBtn.addEventListener('click', async () => {
+            try {
+                await signInWithPopup(auth, provider);
+                Swal.fire('Google sign-in successful! 🎉');
+                document.getElementById('auth-modal').style.display = 'none';
+            } catch (error) {
+                Swal.fire('Error', error.message, 'error');
+            }
+        });
     </script>
 </body>
 </html>

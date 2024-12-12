@@ -194,11 +194,13 @@
             <p class="text-center mb-4" id="contact-mission"></p>
             <p class="text-center mb-4" id="contact-description"></p>
             <form action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST" id="contact-form">
-                <div class="mb-3">
+                <!-- REMOVED Email Input -->
+                <!-- <div class="mb-3">
                     <label for="emailContact" class="form-label">Email address</label>
                     <input type="email" class="form-control" name="email" id="emailContact"
                         placeholder="name@example.com" required>
-                </div>
+                </div> -->
+                
                 <div class="mb-3">
                     <p>Select a category: <span class="text-danger">*</span></p>
                     <div class="form-check">
@@ -227,8 +229,12 @@
                     <textarea class="form-control" name="message" id="messageContact" rows="3"
                         placeholder="Describe your issue or request here..." required></textarea>
                 </div>
-                <!-- Hidden subject field that will be updated before submit -->
+                <!-- Hidden fields -->
                 <input type="hidden" name="_subject" value="Contact Request">
+                
+                <!-- ADDED hidden email field to use auth user email -->
+                <input type="hidden" name="email" id="hiddenUserEmail">
+                
                 <button type="submit" class="primary-btn">Send</button>
             </form>
         </section>
@@ -515,6 +521,13 @@
                 } else {
                     a.style.display = 'none'
                 }
+
+                // ADDED: Update hiddenUserEmail field on login
+                const hiddenEmail = document.getElementById('hiddenUserEmail');
+                if (hiddenEmail) {
+                    hiddenEmail.value = u.email;
+                }
+
             } else {
                 s.textContent = '';
                 a.style.display = 'none'
@@ -559,11 +572,23 @@
             })
             .catch(e => console.error('Error loading body text:', e))
 
-        // Contact form submission with validation
+        // Contact form submission with validation and auth check
         document.getElementById('contact-form').addEventListener('submit', function(e) {
+            const u = auth.currentUser;
+            if (!u) {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Not Signed In',
+                    text: 'You must be signed in to submit a contact request.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
             const selectedCategory = this.querySelector('input[name="category"]:checked');
             if (!selectedCategory) {
-                e.preventDefault(); // Prevent form submission
+                e.preventDefault();
                 Swal.fire({
                     title: 'Category Required',
                     text: 'Please select a category before submitting your message.',
@@ -575,16 +600,9 @@
 
             const subjectInput = this.querySelector('input[name="_subject"]');
             subjectInput.value = `Contact Request - ${selectedCategory.value}`;
+            
+            // Since user is signed in, their email is already in hiddenUserEmail
         });
     </script>
 </body>
 </html>
-        const firebaseConfig = {
-          apiKey: "YOUR_FIREBASE_API_KEY",
-          authDomain: "zettelkasten-shop.firebaseapp.com",
-          projectId: "zettelkasten-shop",
-          storageBucket: "zettelkasten-shop.appspot.com",
-          messagingSenderId: "671757800099",
-          appId: "1:671757800099:web:c8a81ec0ade00765452516",
-          measurementId: "G-VPBMF42BKN"
-        };

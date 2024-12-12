@@ -166,7 +166,8 @@
                     </svg>
                 </div>
                 <div id="user-status"></div>
-                <button class="primary-btn me-2" onclick="toggleAuthModal()">Login/Register</button>
+                <!-- Modified button -->
+                <button class="primary-btn me-2" id="login-logout-btn" onclick="toggleAuthModal()">Login/Register</button>
                 <button class="primary-btn" onclick="toggleCartModal()">Cart</button>
             </div>
         </div>
@@ -184,6 +185,14 @@
             <p id="about-text"></p>
         </section>
 
+        <!-- Filter Section for categories -->
+        <section class="my-5" id="filter-section">
+            <h3 class="text-center mb-4">Filter by Category</h3>
+            <div class="d-flex flex-wrap justify-content-center" id="category-filters">
+                <!-- Checkboxes will be inserted here by JS -->
+            </div>
+        </section>
+
         <section id="products" class="my-5">
             <h3 class="text-center mb-4">Our Products</h3>
             <div class="row g-4" id="product-list"></div>
@@ -194,13 +203,6 @@
             <p class="text-center mb-4" id="contact-mission"></p>
             <p class="text-center mb-4" id="contact-description"></p>
             <form action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST" id="contact-form">
-                <!-- REMOVED Email Input -->
-                <!-- <div class="mb-3">
-                    <label for="emailContact" class="form-label">Email address</label>
-                    <input type="email" class="form-control" name="email" id="emailContact"
-                        placeholder="name@example.com" required>
-                </div> -->
-                
                 <div class="mb-3">
                     <p>Select a category: <span class="text-danger">*</span></p>
                     <div class="form-check">
@@ -229,12 +231,8 @@
                     <textarea class="form-control" name="message" id="messageContact" rows="3"
                         placeholder="Describe your issue or request here..." required></textarea>
                 </div>
-                <!-- Hidden fields -->
                 <input type="hidden" name="_subject" value="Contact Request">
-                
-                <!-- ADDED hidden email field to use auth user email -->
                 <input type="hidden" name="email" id="hiddenUserEmail">
-                
                 <button type="submit" class="primary-btn">Send</button>
             </form>
         </section>
@@ -301,17 +299,17 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js"
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js"
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js"
         import { getFirestore, collection, addDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js"
 
         const firebaseConfig = {
-          apiKey: "AIzaSyCWSWj1zGd85SswT8FRBTHmlOFemBIbVdI",
-          authDomain: "zettelkasten-shop.firebaseapp.com",
-          projectId: "zettelkasten-shop",
-          storageBucket: "zettelkasten-shop.firebasestorage.app",
-          messagingSenderId: "671757800099",
-          appId: "1:671757800099:web:c8a81ec0ade00765452516",
-          measurementId: "G-VPBMF42BKN"
+          apiKey: "YOUR_API_KEY",
+          authDomain: "YOUR_AUTH_DOMAIN",
+          projectId: "YOUR_PROJECT_ID",
+          storageBucket: "YOUR_STORAGE_BUCKET",
+          messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+          appId: "YOUR_APP_ID",
+          measurementId: "YOUR_MEASUREMENT_ID"
         };
 
         const app = initializeApp(firebaseConfig)
@@ -323,6 +321,7 @@
         let productsArray = []
         let selectedProductIndex = null
         let bodyData = {}
+        let allCategories = new Set();
 
         const pastelColors = ["#AEC6CF", "#F9D5E5", "#FDFD96", "#FFD1DC", "#77DD77", "#CDB7F6"]
 
@@ -508,6 +507,7 @@
         async function updateUserStatus() {
             const s = document.getElementById('user-status');
             const a = document.getElementById('user-avatar');
+            const loginLogoutBtn = document.getElementById('login-logout-btn');
             const u = auth.currentUser;
             if (u) {
                 s.textContent = `Logged in as ${u.email}`;
@@ -522,41 +522,43 @@
                     a.style.display = 'none'
                 }
 
-                // ADDED: Update hiddenUserEmail field on login
                 const hiddenEmail = document.getElementById('hiddenUserEmail');
                 if (hiddenEmail) {
                     hiddenEmail.value = u.email;
                 }
 
+                // When logged in, show "Logout"
+                loginLogoutBtn.textContent = "Logout";
+                loginLogoutBtn.onclick = async () => {
+                    await signOut(auth);
+                };
+
             } else {
                 s.textContent = '';
                 a.style.display = 'none'
+
+                // When logged out, show "Login/Register"
+                loginLogoutBtn.textContent = "Login/Register";
+                loginLogoutBtn.onclick = () => {
+                    toggleAuthModal();
+                };
             }
         }
 
         onAuthStateChanged(auth, (u) => { updateUserStatus() })
 
+        let allProducts = [];
+
         fetch('products.json')
             .then(r => r.json())
             .then(products => {
                 productsArray = products;
-                const pl = document.getElementById('product-list');
-                products.forEach((p, i) => {
-                    const c = document.createElement('div');
-                    c.classList.add('col-md-4');
-                    c.innerHTML = `
-                        <div class="product-card">
-                            <img src="${p.image}" alt="${p.name}">
-                            <div class="p-3">
-                                <h5>${p.name}</h5>
-                                <p>${p.description}</p>
-                                <p><strong>$${p.price.toFixed(2)}</strong></p>
-                                <p><em>Ships in 7-10 days depending...</em></p>
-                                <button class="primary-btn w-100" onclick="addToCart(${i})">Add to Cart</button>
-                            </div>
-                        </div>`;
-                    pl.appendChild(c)
-                })
+                allProducts = products; 
+                products.forEach(p => {
+                    p.categories.forEach(cat => allCategories.add(cat));
+                });
+                renderCategoryFilters();
+                renderProducts(productsArray);
             })
             .catch(e => console.error('Error loading products:', e))
 
@@ -572,7 +574,7 @@
             })
             .catch(e => console.error('Error loading body text:', e))
 
-        // Contact form submission with validation and auth check
+        // Contact form submission with auth check
         document.getElementById('contact-form').addEventListener('submit', function(e) {
             const u = auth.currentUser;
             if (!u) {
@@ -600,9 +602,74 @@
 
             const subjectInput = this.querySelector('input[name="_subject"]');
             subjectInput.value = `Contact Request - ${selectedCategory.value}`;
-            
-            // Since user is signed in, their email is already in hiddenUserEmail
         });
+
+        function renderCategoryFilters() {
+            const container = document.getElementById('category-filters');
+            container.innerHTML = '';
+            allCategories.forEach(cat => {
+                const id = `cat-filter-${cat}`;
+                const cb = document.createElement('div');
+                cb.className = 'form-check form-check-inline m-2';
+                cb.innerHTML = `
+                    <input class="form-check-input" type="checkbox" id="${id}" value="${cat}">
+                    <label class="form-check-label" for="${id}">${cat}</label>
+                `;
+                container.appendChild(cb);
+            });
+
+            const filterBtn = document.createElement('button');
+            filterBtn.className = 'primary-btn m-2';
+            filterBtn.textContent = 'Filter';
+            filterBtn.addEventListener('click', applyCategoryFilter);
+            container.appendChild(filterBtn);
+
+            const resetBtn = document.createElement('button');
+            resetBtn.className = 'btn btn-light m-2';
+            resetBtn.textContent = 'Reset Filters';
+            resetBtn.addEventListener('click', () => {
+                container.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+                renderProducts(allProducts);
+            });
+            container.appendChild(resetBtn);
+        }
+
+        function applyCategoryFilter() {
+            const selectedCats = Array.from(document.querySelectorAll('#category-filters input[type="checkbox"]:checked'))
+                                     .map(cb => cb.value);
+            if (selectedCats.length === 0) {
+                renderProducts(allProducts);
+                return;
+            }
+
+            const filtered = allProducts.filter(p => {
+                return p.categories.some(cat => selectedCats.includes(cat));
+            });
+            renderProducts(filtered);
+        }
+
+        function renderProducts(products) {
+            const pl = document.getElementById('product-list');
+            pl.innerHTML = '';
+            productsArray = products;
+            products.forEach((p, i) => {
+                const c = document.createElement('div');
+                c.classList.add('col-md-4');
+                c.innerHTML = `
+                    <div class="product-card">
+                        <img src="${p.image}" alt="${p.name}">
+                        <div class="p-3">
+                            <h5>${p.name}</h5>
+                            <p>${p.description}</p>
+                            <p><strong>$${p.price.toFixed(2)}</strong></p>
+                            <p><em>Ships in 7-10 days depending...</em></p>
+                            <button class="primary-btn w-100" onclick="addToCart(${allProducts.indexOf(p)})">Add to Cart</button>
+                        </div>
+                    </div>`;
+                pl.appendChild(c)
+            })
+        }
+
     </script>
 </body>
 </html>

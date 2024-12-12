@@ -82,6 +82,24 @@
             width: 20px;
             margin-right: 10px;
         }
+        /* Cart Item Styling */
+        .cart-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .cart-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            margin-right: 10px;
+        }
+        /* Sign-in status */
+        #user-status {
+            margin-right: 10px;
+            color: #10b981;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -95,17 +113,18 @@
                     <li class="nav-item"><a href="#contact" class="nav-link text-white">Contact</a></li>
                 </ul>
             </nav>
-            <div>
-                <button class="primary-btn" onclick="document.getElementById('auth-modal').style.display='flex'">Login/Register</button>
-                <button class="primary-btn" onclick="document.getElementById('cart-modal').style.display='flex'">Cart</button>
+            <div class="d-flex align-items-center">
+                <div id="user-status"></div>
+                <button class="primary-btn" onclick="toggleAuthModal()">Login/Register</button>
+                <button class="primary-btn" onclick="toggleCartModal()">Cart</button>
             </div>
         </div>
     </header>
 
     <main class="container my-5">
         <section id="hero" class="text-center py-5">
-            <h2 class="mb-4">Organize Your Thoughts, Build Your Knowledge</h2>
-            <p class="mb-4">Discover premium Zettelkasten products designed to elevate your note-taking experience.</p>
+            <h2 class="mb-4" id="hero-heading"></h2>
+            <p class="mb-4" id="hero-text"></p>
             <button class="primary-btn" onclick="showOffer()">Special Offer</button>
         </section>
         <section id="products" class="my-5">
@@ -114,25 +133,27 @@
                 <!-- Products will be loaded here dynamically -->
             </div>
         </section>
-        
 
         <section id="about" class="my-5 text-center">
             <h3 class="mb-4">About Us</h3>
-            <p>We are passionate about helping you capture, organize, and connect your ideas. Zettelkasten Store is your one-stop destination for everything Zettelkasten.</p>
+            <p id="about-text"></p>
         </section>
+
         <section id="contact" class="my-5">
-            <h3 class="text-center mb-4">Contact Us</h3>
-            <form>
+            <h3 class="text-center mb-4">Contact & Support</h3>
+            <p class="text-center mb-4" id="contact-description"></p>
+            <form action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST">
                 <div class="mb-3">
                     <label for="emailContact" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="emailContact" placeholder="name@example.com">
+                    <input type="email" class="form-control" name="email" id="emailContact" placeholder="name@example.com" required>
                 </div>
                 <div class="mb-3">
                     <label for="messageContact" class="form-label">Message</label>
-                    <textarea class="form-control" id="messageContact" rows="3"></textarea>
+                    <textarea class="form-control" name="message" id="messageContact" rows="3" placeholder="Describe your issue or request here..." required></textarea>
                 </div>
                 <button type="submit" class="primary-btn">Send</button>
             </form>
+            <p class="mt-3 text-center" style="font-size:0.9em;">We support password resets, returns, etc. We offer a 100% full refund once the product is received. Powered by Stripe payments. Backend secured by Firebase & Cloudflare.</p>
         </section>
     </main>
 
@@ -174,7 +195,7 @@
                     <p class="text-center">Already have an account? <span class="auth-toggle" id="show-login">Login</span></p>
                 </div>
             </div>
-            <button class="btn btn-light w-100 mt-3" onclick="document.getElementById('auth-modal').style.display='none'">Close</button>
+            <button class="btn btn-light w-100 mt-3" onclick="toggleAuthModal()">Close</button>
         </div>
     </div>
 
@@ -182,9 +203,9 @@
     <div id="cart-modal">
         <div>
             <h3>Your Cart</h3>
-            <ul id="cart-items"></ul>
+            <div id="cart-content"></div>
             <button class="primary-btn w-100 mb-2" id="checkout-btn">Checkout</button>
-            <button class="btn btn-light w-100" onclick="document.getElementById('cart-modal').style.display='none'">Close</button>
+            <button class="btn btn-light w-100" onclick="toggleCartModal()">Close</button>
         </div>
     </div>
 
@@ -192,12 +213,12 @@
     <script type="module">
         // Import Firebase SDKs
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
         // Your Firebase configuration
         const firebaseConfig = {
-          apiKey: "AIzaSyCWSWj1zGd85SswT8FRBTHmlOFemBIbVdI",
+          apiKey: "YOUR_FIREBASE_API_KEY",
           authDomain: "zettelkasten-shop.firebaseapp.com",
           projectId: "zettelkasten-shop",
           storageBucket: "zettelkasten-shop.firebasestorage.app",
@@ -214,13 +235,28 @@
         feather.replace();
 
         // Cart functionality
-        const cart = [];
+        let cart = [];
+
+        function toggleAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function toggleCartModal() {
+            const user = auth.currentUser;
+            if (!user) {
+                Swal.fire('Please log in to view your cart.');
+                return;
+            }
+            const modal = document.getElementById('cart-modal');
+            modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
+        }
 
         window.addToCart = function(item) {
             cart.push(item);
             Swal.fire({
                 title: 'Item Added!',
-                text: `${item} has been added to your cart.`,
+                text: `${item.name} has been added to your cart.`,
                 icon: 'success',
                 confirmButtonText: 'Continue Shopping'
             });
@@ -228,22 +264,34 @@
         }
 
         function updateCartDisplay() {
-            const cartItems = document.getElementById('cart-items');
-            cartItems.innerHTML = '';
+            const cartContent = document.getElementById('cart-content');
+            cartContent.innerHTML = '';
+            if (cart.length === 0) {
+                cartContent.innerHTML = '<p>Your cart is empty.</p>';
+                return;
+            }
             cart.forEach((item) => {
-                const li = document.createElement('li');
-                li.textContent = item;
-                cartItems.appendChild(li);
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}">
+                    <span>${item.name} - $${item.price.toFixed(2)}</span>
+                `;
+                cartContent.appendChild(div);
             });
         }
 
         window.showOffer = function() {
-            Swal.fire({
-                title: 'Special Offer!',
-                text: 'Get 20% off on orders over $50!',
-                icon: 'info',
-                confirmButtonText: 'Shop Now'
-            });
+            fetch('body.json')
+              .then(r => r.json())
+              .then(data => {
+                Swal.fire({
+                    title: data.specialOfferTitle,
+                    text: data.specialOfferText,
+                    icon: 'info',
+                    confirmButtonText: 'Shop Now'
+                });
+              });
         }
 
         document.getElementById('checkout-btn').addEventListener('click', async () => {
@@ -252,14 +300,18 @@
                 Swal.fire('Please log in to checkout.');
                 return;
             }
+            if (cart.length === 0) {
+                Swal.fire('Your cart is empty.');
+                return;
+            }
             try {
                 await addDoc(collection(db, 'orders'), {
                     userId: user.uid,
                     cart: cart,
                     timestamp: new Date()
                 });
-                Swal.fire('Checkout successful!');
-                cart.length = 0;
+                Swal.fire('Checkout successful! Your order will ship in 7-10 days with free shipping.');
+                cart = [];
                 updateCartDisplay();
                 document.getElementById('cart-modal').style.display='none';
             } catch (error) {
@@ -293,7 +345,7 @@
             try {
                 await signInWithEmailAndPassword(auth, email, password);
                 Swal.fire('Login successful! 🎉');
-                document.getElementById('auth-modal').style.display = 'none';
+                toggleAuthModal();
             } catch (error) {
                 Swal.fire('Error', error.message, 'error');
             }
@@ -305,7 +357,7 @@
             try {
                 await createUserWithEmailAndPassword(auth, email, password);
                 Swal.fire('Registration successful! 🎉');
-                document.getElementById('auth-modal').style.display = 'none';
+                toggleAuthModal();
             } catch (error) {
                 Swal.fire('Error', error.message, 'error');
             }
@@ -318,36 +370,58 @@
             try {
                 await signInWithPopup(auth, provider);
                 Swal.fire('Google sign-in successful! 🎉');
-                document.getElementById('auth-modal').style.display = 'none';
+                toggleAuthModal();
             } catch (error) {
                 Swal.fire('Error', error.message, 'error');
             }
         });
-        // Fetch products from JSON and display them
-  fetch('products.json')
-    .then(response => response.json())
-    .then(products => {
-      const productList = document.getElementById('product-list');
-      products.forEach(product => {
-        const col = document.createElement('div');
-        col.classList.add('col-md-4');
 
-        col.innerHTML = `
-            <div class="product-card">
-                <img src="${product.image}" alt="${product.name}">
-                <div class="p-3">
-                    <h5>${product.name}</h5>
-                    <p>${product.description}</p>
-                    <p><strong>$${product.price.toFixed(2)}</strong></p>
-                    <button class="primary-btn w-100" onclick="addToCart('${product.name} - $${product.price.toFixed(2)}')">Add to Cart</button>
-                </div>
-            </div>
-        `;
+        // Observe auth state
+        onAuthStateChanged(auth, user => {
+            const userStatus = document.getElementById('user-status');
+            if (user) {
+                userStatus.textContent = `Logged in as ${user.email}`;
+            } else {
+                userStatus.textContent = '';
+            }
+        });
 
-        productList.appendChild(col);
-      });
-    })
-    .catch(error => console.error('Error loading products:', error));
+        // Fetch products from JSON and display them (including shipping info)
+        fetch('products.json')
+            .then(response => response.json())
+            .then(products => {
+                const productList = document.getElementById('product-list');
+                products.forEach(product => {
+                    const col = document.createElement('div');
+                    col.classList.add('col-md-4');
+
+                    col.innerHTML = `
+                        <div class="product-card">
+                            <img src="${product.image}" alt="${product.name}">
+                            <div class="p-3">
+                                <h5>${product.name}</h5>
+                                <p>${product.description}</p>
+                                <p><strong>$${product.price.toFixed(2)}</strong></p>
+                                <p><em>Ships in 7-10 days • Free Shipping</em></p>
+                                <button class="primary-btn w-100" onclick="addToCart(${JSON.stringify(product)})">Add to Cart</button>
+                            </div>
+                        </div>
+                    `;
+                    productList.appendChild(col);
+                });
+            })
+            .catch(error => console.error('Error loading products:', error));
+
+        // Load textual content from body.json
+        fetch('body.json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('hero-heading').textContent = data.heroTitle;
+                document.getElementById('hero-text').textContent = data.heroText;
+                document.getElementById('about-text').textContent = data.aboutText;
+                document.getElementById('contact-description').textContent = data.contactDescription;
+            })
+            .catch(error => console.error('Error loading body text:', error));
     </script>
 </body>
 </html>

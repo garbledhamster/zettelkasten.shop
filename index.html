@@ -33,6 +33,7 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             overflow: hidden;
+            background: #fff;
         }
         .footer {
             background-color: #1f2937;
@@ -40,9 +41,10 @@
             padding: 20px 0;
         }
         .product-card img {
-            height: 200px;
-            object-fit: cover;
             width: 100%;
+            height: 200px;
+            object-fit: contain;
+            background-color: #fff;
         }
         #auth-modal, #cart-modal {
             display: none; 
@@ -103,44 +105,17 @@
     <main class="container my-5">
         <section id="hero" class="text-center py-5">
             <h2 class="mb-4">Organize Your Thoughts, Build Your Knowledge</h2>
-            <p class="mb-4">Discover premium Zettelkasten products designed to elevate your notetaking experience.</p>
+            <p class="mb-4">Discover premium Zettelkasten products designed to elevate your note-taking experience.</p>
             <button class="primary-btn" onclick="showOffer()">Special Offer</button>
         </section>
         <section id="products" class="my-5">
             <h3 class="text-center mb-4">Our Products</h3>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="product-card">
-                        <img src="https://picsum.photos/400/300?random=1" alt="Notecards">
-                        <div class="p-3">
-                            <h5>4x6 Notecards</h5>
-                            <p>Perfect for building your Zettelkasten system.</p>
-                            <button class="primary-btn w-100" onclick="addToCart('4x6 Notecards')">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="product-card">
-                        <img src="https://picsum.photos/400/300?random=2" alt="Card Containers">
-                        <div class="p-3">
-                            <h5>Card Containers</h5>
-                            <p>Keep your cards safe and organized.</p>
-                            <button class="primary-btn w-100" onclick="addToCart('Card Containers')">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="product-card">
-                        <img src="https://picsum.photos/400/300?random=3" alt="Zettelkasten Pens">
-                        <div class="p-3">
-                            <h5>Zettelkasten Pens</h5>
-                            <p>Write your notes with precision and style.</p>
-                            <button class="primary-btn w-100" onclick="addToCart('Zettelkasten Pens')">Add to Cart</button>
-                        </div>
-                    </div>
-                </div>
+            <div class="row g-4" id="product-list">
+                <!-- Products will be loaded here dynamically -->
             </div>
         </section>
+        
+
         <section id="about" class="my-5 text-center">
             <h3 class="mb-4">About Us</h3>
             <p>We are passionate about helping you capture, organize, and connect your ideas. Zettelkasten Store is your one-stop destination for everything Zettelkasten.</p>
@@ -190,7 +165,7 @@
                     <button class="primary-btn w-100 mb-2" id="login-btn">Login</button>
                     <p class="text-center">Don't have an account? <span class="auth-toggle" id="show-register">Register</span></p>
                 </div>
-                <!-- Register Form (hidden by default) -->
+                <!-- Register Form -->
                 <div id="register-form" style="display:none;">
                     <h5>Register with Email</h5>
                     <input class="form-control mb-2" id="registerEmail" type="email" placeholder="Email" />
@@ -220,15 +195,15 @@
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
         import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
-        // Replace with your Firebase configuration
+        // Your Firebase configuration
         const firebaseConfig = {
-            apiKey: "your-api-key",
-            authDomain: "your-auth-domain",
-            projectId: "your-project-id",
-            storageBucket: "your-storage-bucket",
-            messagingSenderId: "your-messaging-sender-id",
-            appId: "your-app-id",
-            measurementId: "your-measurement-id"
+          apiKey: "AIzaSyCWSWj1zGd85SswT8FRBTHmlOFemBIbVdI",
+          authDomain: "zettelkasten-shop.firebaseapp.com",
+          projectId: "zettelkasten-shop",
+          storageBucket: "zettelkasten-shop.firebasestorage.app",
+          messagingSenderId: "671757800099",
+          appId: "1:671757800099:web:c8a81ec0ade00765452516",
+          measurementId: "G-VPBMF42BKN"
         };
 
         // Initialize Firebase
@@ -348,6 +323,31 @@
                 Swal.fire('Error', error.message, 'error');
             }
         });
+        // Fetch products from JSON and display them
+  fetch('products.json')
+    .then(response => response.json())
+    .then(products => {
+      const productList = document.getElementById('product-list');
+      products.forEach(product => {
+        const col = document.createElement('div');
+        col.classList.add('col-md-4');
+
+        col.innerHTML = `
+            <div class="product-card">
+                <img src="${product.image}" alt="${product.name}">
+                <div class="p-3">
+                    <h5>${product.name}</h5>
+                    <p>${product.description}</p>
+                    <p><strong>$${product.price.toFixed(2)}</strong></p>
+                    <button class="primary-btn w-100" onclick="addToCart('${product.name} - $${product.price.toFixed(2)}')">Add to Cart</button>
+                </div>
+            </div>
+        `;
+
+        productList.appendChild(col);
+      });
+    })
+    .catch(error => console.error('Error loading products:', error));
     </script>
 </body>
 </html>

@@ -1,0 +1,116 @@
+[  
+  {
+    "name": "Plastic Index Card File (4x6)",
+    "image": "images/products/OXF01461.jpg",
+    "description": "Special groove, snap closure, holds 400 cards.",
+    "price": 13.55
+  },
+  {
+    "name": "Durable Poly A-Z Card Guides (4x6)",
+    "image": "images/products/OXF73154.jpg",
+    "description": "Color-coded A-Z guides, tear-resistant poly.",
+    "price": 37.45
+  },
+  {
+    "name": "Unruled Index Cards (4x6, Blue, 100/Pack)",
+    "image": "images/products/OXF7420BLU.jpg",
+    "description": "Uniform size, commercial-quality stock.",
+    "price": 9.69
+  },
+  {
+    "name": "Plastic Index Card Boxes (4x6)",
+    "image": "images/products/UNV47287.jpg",
+    "description": "Hinged box, snap closure, holds 400 cards.",
+    "price": 13.92
+  },
+  {
+    "name": "Vaultz Locking Index Card File (4x6)",
+    "image": "images/products/IDEVZ01171.jpg",
+    "description": "Secure lock, holds 450 cards, sturdy build.",
+    "price": 42.89
+  },
+  {
+    "name": "Spiral Index Cards (4x6, Assorted, 50/Pack)",
+    "image": "images/products/OXF40286.jpg",
+    "description": "Spiral bound, perforated, color-coded.",
+    "price": 9.61
+  },
+  {
+    "name": "Vaultz Two-Drawer Index Card Box (4x6)",
+    "image": "images/products/IDEVZ01395.jpg",
+    "description": "Holds 3,000 cards, lockable, heavy-duty.",
+    "price": 177.15
+  },
+  {
+    "name": "Unruled Index Cards (4x6, Green, 100/Pack)",
+    "image": "images/products/OXF7420GRE.jpg",
+    "description": "Green index cards, sturdy and uniform.",
+    "price": 9.09
+  },
+  {
+    "name": "Index Card Storage Box (4x6, Indigo/Black)",
+    "image": "images/products/OXF406462.jpg",
+    "description": "Holds 1,000 cards, adjustable follower.",
+    "price": 49.37
+  },
+  {
+    "name": "Manila Card Guides (A-Z, 4x6)",
+    "image": "images/products/SMD56076.jpg",
+    "description": "A-Z indexed guides, durable manila stock.",
+    "price": 12.75
+  },
+  {
+    "name": "Super Stacker Storage Box (4x6)",
+    "image": "images/products/AVT40305.jpg",
+    "description": "Holds 500 cards, clear plastic box.",
+    "price": 6.81
+  },
+  {
+    "name": "Super Stacker Storage Box (3x5)",
+    "image": "images/products/AVT40307.jpg",
+    "description": "Holds 400 3x5 cards, clear & durable.",
+    "price": 5.01
+  },
+  {
+    "name": "Index Card Storage Box (3x5, White/Black)",
+    "image": "images/products/OXF406350.jpg",
+    "description": "Holds 1,000 cards, pressboard construction.",
+    "price": 39.85
+  },
+  {
+    "name": "Index Card Storage Box (3x5, Blue Fog/Black)",
+    "image": "images/products/OXF406355.jpg",
+    "description": "Holds 1,000 cards, sturdy pressboard.",
+    "price": 39.66
+  },
+  {
+    "name": "Vaultz Locking Storage Chest",
+    "image": "images/products/IDEVZ00323.jpg",
+    "description": "Secure lock, fiberboard construction.",
+    "price": 143.00
+  },
+  {
+    "name": "Vaultz Four-Drawer CD File Cabinet",
+    "image": "images/products/IDEVZ01049.jpg",
+    "description": "Locking, holds multiple CDs/folders.",
+    "price": 310.69
+  },
+  {
+    "name": "Vaultz Two-Drawer CD File Cabinet",
+    "image": "images/products/IDEVZ01094.jpg",
+    "description": "Lockable, holds CDs/folders securely.",
+    "price": 185.89
+  },
+  {
+    "name": "Vaultz Locking Index Card File (5x8)",
+    "image": "images/products/IDEVZ01280.jpg",
+    "description": "Holds 550 cards, secure key lock.",
+    "price": 48.91
+  },
+  {
+    "name": "Plastic Index Card Boxes (3x5)",
+    "image": "images/products/UNV47286.jpg",
+    "description": "Holds 300 cards, translucent black.",
+    "price": 9.05
+  }
+]

@@ -166,7 +166,6 @@
                     </svg>
                 </div>
                 <div id="user-status"></div>
-                <!-- Modified button -->
                 <button class="primary-btn me-2" id="login-logout-btn" onclick="toggleAuthModal()">Login/Register</button>
                 <button class="primary-btn" onclick="toggleCartModal()">Cart</button>
             </div>
@@ -528,8 +527,14 @@
 
                 // When logged in, show "Logout"
                 loginLogoutBtn.textContent = "Logout";
-                loginLogoutBtn.onclick = async () => {
-                    await signOut(auth);
+                loginLogoutBtn.onclick = () => {
+                    signOut(auth)
+                      .then(() => {
+                        Swal.fire('Logout successful! 🎉');
+                      })
+                      .catch(er => {
+                        Swal.fire('Error', er.message, 'error');
+                      });
                 };
 
             } else {

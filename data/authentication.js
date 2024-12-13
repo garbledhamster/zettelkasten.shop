@@ -1,0 +1,69 @@
+// data/authentication.js
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js"
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js"
+import { getFirestore, collection, addDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js"
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCWSWj1zGd85SswT8FRBTHmlOFemBIbVI",
+    authDomain: "zettelkasten-shop.firebaseapp.com",
+    projectId: "zettelkasten-shop",
+    storageBucket: "zettelkasten-shop.firebasestorage.app",
+    messagingSenderId: "671757800099",
+    appId: "1:671757800099:web:c8a81ec0ade00765452516",
+    measurementId: "G-VPBMF42BKN"
+};
+
+const app = initializeApp(firebaseConfig)
+export const auth = getAuth(app)
+export const db = getFirestore(app)
+
+const pastelColors = ["#AEC6CF", "#F9D5E5", "#FDFD96", "#FFD1DC", "#77DD77", "#CDB7F6"]
+
+export async function registerWithEmail(email, password) {
+    const uc = await createUserWithEmailAndPassword(auth, email, password);
+    const u = uc.user;
+    const rc = pastelColors[Math.floor(Math.random() * pastelColors.length)];
+    await setDoc(doc(db, "users", u.uid), { avatarColor: rc });
+    return u;
+}
+
+export async function loginWithEmail(email, password) {
+    await signInWithEmailAndPassword(auth, email, password);
+}
+
+const provider = new GoogleAuthProvider();
+export async function signInWithGooglePopup() {
+    const r = await signInWithPopup(auth, provider);
+    const u = r.user;
+    const ur = doc(db, "users", u.uid);
+    const us = await getDoc(ur);
+    if (!us.exists()) {
+        const rc = pastelColors[Math.floor(Math.random() * pastelColors.length)];
+        await setDoc(ur, { avatarColor: rc });
+    }
+    return u;
+}
+
+export async function signOutUser() {
+    await signOut(auth);
+}
+
+export function onAuthChange(callback) {
+    onAuthStateChanged(auth, callback);
+}
+
+export async function getUserData(uid) {
+    const ur = doc(db, "users", uid);
+    const us = await getDoc(ur);
+    return us.exists() ? us.data() : null;
+}
+
+export function getCurrentUser() {
+    return auth.currentUser;
+}
+
+export async function placeOrder(cart) {
+    const u = getCurrentUser();
+    if (!u) throw new Error("Not logged in");
+    await addDoc(collection(db, 'orders'), { userId: u.uid, cart: cart, timestamp: new Date() });
+}

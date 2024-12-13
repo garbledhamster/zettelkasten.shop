@@ -1,0 +1,128 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
+}
+
+.primary-btn {
+    background-color: #c41bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.primary-btn:hover {
+    background-color: #c41bff;
+}
+
+.product-card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.footer {
+    background-color: #1f2937;
+    color: #f9fafb;
+    padding: 20px 0;
+}
+
+.product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    background-color: #fff;
+}
+
+#auth-modal,
+#cart-modal,
+#options-modal {
+    display: none;
+    position: fixed;
+    background: rgba(0, 0, 0, 0.5);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+#auth-modal > div,
+#cart-modal > div,
+#options-modal > div {
+    background: #fff;
+    padding: 20px;
+    width: 300px;
+    border-radius: 8px;
+}
+
+.auth-toggle {
+    cursor: pointer;
+    color: #c41bff;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.google-btn {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    color: #000;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 6px 10px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.google-btn img {
+    width: 20px;
+    margin-right: 10px;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.cart-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    margin-right: 10px;
+}
+
+#user-status {
+    margin-right: 10px;
+    color: #c41bff;
+    font-weight: 600;
+}
+
+#user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+#user-avatar svg {
+    width: 24px;
+    height: 24px;
+    stroke: #333;
+}
+
+/* Additional spacing for better UX */
+#contact-form .form-check {
+    margin-bottom: 0.5rem;
+}

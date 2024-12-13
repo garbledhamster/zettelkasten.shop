@@ -1,7 +1,22 @@
 // data/authentication.js
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js"
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js"
-import { getFirestore, collection, addDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js"
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+import { 
+    getAuth, 
+    signInWithEmailAndPassword, 
+    createUserWithEmailAndPassword, 
+    signInWithPopup, 
+    GoogleAuthProvider, 
+    onAuthStateChanged, 
+    signOut 
+} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+import { 
+    getFirestore, 
+    collection, 
+    addDoc, 
+    doc, 
+    setDoc, 
+    getDoc 
+} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCWSWj1zGd85SswT8FRBTHmlOFemBIbVI",
@@ -13,39 +28,59 @@ const firebaseConfig = {
     measurementId: "G-VPBMF42BKN"
 };
 
-const app = initializeApp(firebaseConfig)
-export const auth = getAuth(app)
-export const db = getFirestore(app)
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const db = getFirestore(app);
 
-const pastelColors = ["#AEC6CF", "#F9D5E5", "#FDFD96", "#FFD1DC", "#77DD77", "#CDB7F6"]
+const pastelColors = ["#AEC6CF", "#F9D5E5", "#FDFD96", "#FFD1DC", "#77DD77", "#CDB7F6"];
 
 export async function registerWithEmail(email, password) {
-    const uc = await createUserWithEmailAndPassword(auth, email, password);
-    const u = uc.user;
-    const rc = pastelColors[Math.floor(Math.random() * pastelColors.length)];
-    await setDoc(doc(db, "users", u.uid), { avatarColor: rc });
-    return u;
+    try {
+        const uc = await createUserWithEmailAndPassword(auth, email, password);
+        const u = uc.user;
+        const rc = pastelColors[Math.floor(Math.random() * pastelColors.length)];
+        await setDoc(doc(db, "users", u.uid), { avatarColor: rc });
+        return u;
+    } catch (error) {
+        console.error("Registration Error:", error.message);
+        throw error;
+    }
 }
 
 export async function loginWithEmail(email, password) {
-    await signInWithEmailAndPassword(auth, email, password);
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+        console.error("Login Error:", error.message);
+        throw error;
+    }
 }
 
 const provider = new GoogleAuthProvider();
 export async function signInWithGooglePopup() {
-    const r = await signInWithPopup(auth, provider);
-    const u = r.user;
-    const ur = doc(db, "users", u.uid);
-    const us = await getDoc(ur);
-    if (!us.exists()) {
-        const rc = pastelColors[Math.floor(Math.random() * pastelColors.length)];
-        await setDoc(ur, { avatarColor: rc });
+    try {
+        const r = await signInWithPopup(auth, provider);
+        const u = r.user;
+        const ur = doc(db, "users", u.uid);
+        const us = await getDoc(ur);
+        if (!us.exists()) {
+            const rc = pastelColors[Math.floor(Math.random() * pastelColors.length)];
+            await setDoc(ur, { avatarColor: rc });
+        }
+        return u;
+    } catch (error) {
+        console.error("Google Sign-In Error:", error.message);
+        throw error;
     }
-    return u;
 }
 
 export async function signOutUser() {
-    await signOut(auth);
+    try {
+        await signOut(auth);
+    } catch (error) {
+        console.error("Sign-Out Error:", error.message);
+        throw error;
+    }
 }
 
 export function onAuthChange(callback) {
@@ -53,9 +88,14 @@ export function onAuthChange(callback) {
 }
 
 export async function getUserData(uid) {
-    const ur = doc(db, "users", uid);
-    const us = await getDoc(ur);
-    return us.exists() ? us.data() : null;
+    try {
+        const ur = doc(db, "users", uid);
+        const us = await getDoc(ur);
+        return us.exists() ? us.data() : null;
+    } catch (error) {
+        console.error("Get User Data Error:", error.message);
+        throw error;
+    }
 }
 
 export function getCurrentUser() {
@@ -65,5 +105,14 @@ export function getCurrentUser() {
 export async function placeOrder(cart) {
     const u = getCurrentUser();
     if (!u) throw new Error("Not logged in");
-    await addDoc(collection(db, 'orders'), { userId: u.uid, cart: cart, timestamp: new Date() });
+    try {
+        await addDoc(collection(db, 'orders'), { 
+            userId: u.uid, 
+            cart: cart, 
+            timestamp: new Date() 
+        });
+    } catch (error) {
+        console.error("Place Order Error:", error.message);
+        throw error;
+    }
 }

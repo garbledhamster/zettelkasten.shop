@@ -1,23 +1,3 @@
-// data/authentication.js
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-import { 
-    getAuth, 
-    signInWithEmailAndPassword, 
-    createUserWithEmailAndPassword, 
-    signInWithPopup, 
-    GoogleAuthProvider, 
-    onAuthStateChanged, 
-    signOut 
-} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-import { 
-    getFirestore, 
-    collection, 
-    addDoc, 
-    doc, 
-    setDoc, 
-    getDoc 
-} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
-
 const firebaseConfig = {
     apiKey: "AIzaSyCWSWj1zGd85SswT8FRBTHmlOFemBIbVdI",
     authDomain: "zettelkasten-shop.firebaseapp.com",
@@ -26,7 +6,7 @@ const firebaseConfig = {
     messagingSenderId: "671757800099",
     appId: "1:671757800099:web:c8a81ec0ade00765452516",
     measurementId: "G-VPBMF42BKN"
-  };
+};
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
@@ -106,10 +86,10 @@ export async function placeOrder(cart) {
     const u = getCurrentUser();
     if (!u) throw new Error("Not logged in");
     try {
-        await addDoc(collection(db, 'orders'), { 
-            userId: u.uid, 
-            cart: cart, 
-            timestamp: new Date() 
+        await addDoc(collection(db, 'orders'), {
+            userId: u.uid,
+            cart: cart,
+            timestamp: new Date()
         });
     } catch (error) {
         console.error("Place Order Error:", error.message);

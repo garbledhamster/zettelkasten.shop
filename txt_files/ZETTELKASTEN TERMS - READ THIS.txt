@@ -1,0 +1,63 @@
+1. Antinet: A term coined by Scott Scheper referring to the analog Zettelkasten system, emphasizing physical, handwritten note-taking and structured branching for deep thought.
+2. Analog Zettelkasten: A physical note-keeping system using index cards and handwritten notes, originally developed by Niklas Luhmann, to foster knowledge development and creativity.
+3. Bibcard: A bibliography card used in the Zettelkasten system to reference sources and provide concise summaries for further exploration.
+4. Bib notes: Brief, source-based notes linked to Bibcards, focusing on key takeaways and essential points for integration into the Zettelkasten.
+5. Digital Zettelkasten: A digital adaptation of the Zettelkasten system that uses software to mimic the connections and organization of analog systems.
+6. Fleeting notes: Temporary, quick notes capturing immediate thoughts or ideas, intended to be processed into a permanent format later.
+7. Literature notes: Notes taken directly from readings, often including quotes, summaries, and reflections on specific passages.
+8. Numeric-alpha address: A unique identifier for each note in the Zettelkasten system, enabling branching and connections across the note network.
+9. Permanent notes: Refined and polished notes representing distilled, actionable insights for long-term use and integration.
+10. Tree structure: The branching organization of notes in the Zettelkasten system, mirroring natural patterns of thought and exploration.
+11. Index cards: The medium used in analog Zettelkasten systems, providing a tactile and flexible way to record and organize notes.
+12. Second mind: A metaphorical concept describing the Zettelkasten as an externalized extension of the user's thinking process.
+13. Knowledge development system: A methodology for systematically creating, refining, and connecting ideas to foster intellectual growth and output.
+14. Structured accidents: Unplanned, serendipitous connections between ideas that emerge from the organization and exploration of notes.
+15. Communication partner: A concept describing the Zettelkasten as an interactive system that fosters dialogue and reflection with one’s ideas.
+16. Systems theory: A theoretical framework emphasizing the interdependence of parts within a whole, central to Luhmann’s thinking.
+17. Autopoiesis: A systems theory concept describing a system's ability to maintain and reproduce itself through internal processes.
+18. Feedback loops: Cycles of interaction within systems that influence their evolution and adaptation.
+19. Recursive processes: Self-referential cycles within systems that refine and build upon prior iterations.
+20. Serendipitous interactions: Unexpected and valuable connections between ideas that lead to creativity and innovation.
+21. Tactile recall: Memory triggered through physical interaction with notes, handwriting, or other tangible elements.
+22. Intellectual scaffolding: A structured framework for supporting and organizing complex ideas and knowledge.
+23. Thematic fluidity: The flexibility to explore and connect ideas across themes and disciplines without rigid constraints.
+24. Iterative refinement: The process of revisiting and improving ideas over time through continuous engagement.
+25. Branching system: A hierarchical yet flexible structure for organizing ideas, allowing for infinite growth and connections.
+26. Data: Raw, unprocessed facts or figures without context or interpretation.
+27. Information: Processed and organized data that provides context and meaning.
+28. Knowledge: Information combined with experience, understanding, and application, forming the basis of learning.
+29. Wisdom: The ability to apply knowledge and experience thoughtfully to make sound judgments and decisions.
+30. Understanding: The deep comprehension of ideas, concepts, or systems, enabling their application or explanation.
+31. Reflection: The act of thinking deeply about ideas, experiences, or concepts to gain insights and understanding.
+32. Insight: A sudden realization or understanding of the deeper meaning of an idea or situation.
+33. Creativity: The ability to generate original ideas, connections, or solutions through imagination and exploration.
+34. Curiosity: A desire to learn and explore new ideas, driven by interest and wonder.
+35. Serendipity: The occurrence of unexpected and fortunate discoveries through exploration or chance.
+36. Innovation: The creation of new ideas, methods, or products by combining knowledge and creativity.
+37. Thinking: The cognitive process of forming ideas, solving problems, and making decisions.
+38. Memory: The mental ability to retain, recall, and use information and experiences.
+39. Learning: The process of acquiring knowledge, skills, or understanding through study, experience, or teaching.
+40. Connections: Relationships or links between ideas, concepts, or entities that reveal patterns and meaning.
+41. Complexity: The state of being intricate or interwoven, often involving multiple interconnected components.
+42. Cognition: The mental processes involved in acquiring knowledge and understanding through thought and experience.
+43. Self-awareness: The conscious understanding of one's thoughts, feelings, and behaviors.
+44. Critical thinking: The objective analysis and evaluation of ideas or problems to form reasoned judgments.
+45. Development: The process of growth or progression in knowledge, skills, or understanding.
+46. Interdisciplinarity: The integration and synthesis of knowledge across different fields or disciplines.
+47. Integration: The process of combining different ideas, concepts, or systems into a cohesive whole.
+48. Iteration: The repetition of a process to refine or improve its outcomes.
+49. Synthesis: The combination of diverse ideas or elements into a unified whole.
+50. Hierarchy: A system of organization where elements are ranked according to their relationships or importance.
+51. Perspective: A particular attitude or way of viewing something, shaped by context and experience.
+52. Chaos: A state of apparent disorder or randomness that may still contain underlying patterns.
+53. Order: A state of structured organization that creates clarity and predictability.
+54. Adaptation: The process of adjusting to new conditions or contexts to maintain effectiveness.
+55. Patterns: Recurring arrangements or structures that provide insights into underlying systems.
+56. Transformation: A significant change or evolution in form, function, or understanding.
+57. Recursive thinking: A self-referential process of reflecting on one’s thoughts to deepen understanding.
+58. Engagement: Active involvement or participation in learning or intellectual processes.
+59. Deliberation: Careful and intentional consideration of ideas or decisions.
+60. Conceptualization: The process of forming and defining ideas or concepts.
+61. Analysis: The detailed examination and breakdown of complex ideas or systems.
+62. Abstraction: The process of extracting general principles from specific instances or details.
+63. Context: The circumstances or background information that provide meaning to ideas or events.
